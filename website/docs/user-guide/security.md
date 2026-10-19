@@ -58,6 +58,16 @@ The full set of keys:
 | **manual** | Always prompt the user for approval on dangerous commands. |
 | **off** | Disable all approval checks — equivalent to running with `--yolo`. All commands execute without prompts. |
 
+AppleScript/JXA commands that close or quit applications, delete application data,
+or use System Events to dismiss documents require manual review even in smart
+mode. The same applies to `killall` and `pkill`: a process name cannot tell Hermes
+whether the application holds unsaved work. Read-only inline `osascript` queries,
+activation, signal listings, and signal-zero liveness probes remain available
+without this review. `osascript` source read from a file or standard input also
+requires review because the command text does not contain the code to inspect.
+Existing explicit approvals and YOLO/off or unattended approval policies still
+apply. This is an accident-prevention heuristic, not OS-level isolation.
+
 :::warning
 Setting `approvals.mode: off` disables all safety prompts. Use only in trusted environments (CI/CD, containers, etc.).
 :::

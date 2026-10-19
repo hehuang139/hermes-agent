@@ -90,6 +90,11 @@ def _smart_approve(command: str, description: str) -> str:
 
     Inspired by OpenAI Codex's Smart Approvals guardian subagent (openai/codex#13860).
     """
+    from tools.approval_gui import MANUAL_GUI_DESCRIPTIONS, gui_data_loss_description
+
+    # An auxiliary model cannot establish ownership of GUI state or recover discarded work.
+    if description in MANUAL_GUI_DESCRIPTIONS or gui_data_loss_description(command):
+        return "escalate"
     _smart_t0 = time.monotonic()
     try:
         from agent.auxiliary_client import _get_task_timeout, call_llm

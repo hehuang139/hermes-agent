@@ -849,9 +849,9 @@ class TestGatewayProtection:
         assert "stop/restart" in desc
 
 
-    def test_pkill_unrelated_not_flagged(self):
-        """pkill targeting unrelated processes should not be flagged."""
-        dangerous, _key, _desc = detect_dangerous_command("pkill -f nginx")
+    def test_pkill_liveness_probe_not_flagged(self):
+        """Signal zero checks liveness without terminating another application."""
+        dangerous, _key, _desc = detect_dangerous_command("pkill -0 -f nginx")
         assert dangerous is False
 
 

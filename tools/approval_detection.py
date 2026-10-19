@@ -1547,6 +1547,8 @@ def _is_shell_token_spliced_gateway_lifecycle(command: str) -> bool:
 
 def detect_dangerous_command(command: str) -> tuple:
     """Check dangerous patterns -> (is_dangerous, pattern_key, description)."""
+    from tools.approval_gui import gui_data_loss_description
+
     if _command_parser_limit_exceeded(command):
         return (True, _PARSER_LIMIT_DESCRIPTION, _PARSER_LIMIT_DESCRIPTION)
     if _is_verification_artifact_cleanup(command):
@@ -1569,4 +1571,6 @@ def detect_dangerous_command(command: str) -> tuple:
         return (True, description, description)
     if _is_shell_token_spliced_gateway_lifecycle(command):
         return (True, _GATEWAY_LIFECYCLE_SPLICE_DESCRIPTION, _GATEWAY_LIFECYCLE_SPLICE_DESCRIPTION)
+    if description := gui_data_loss_description(command):
+        return (True, description, description)
     return (False, None, None)
